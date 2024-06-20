@@ -3,14 +3,23 @@ include("session.php");
 $update = false;
 $del = false;
 $expenseamount = "";
+$expense_description="";
 $expensedate = date("Y-m-d");
 $expensecategory = "Outros";
+$cat_options = [];
+$optionsquery = "select category_name from categories where id_user = $userid";
+$options_q = mysqli_query($con, $optionsquery);
+while($row = mysqli_fetch_assoc($options_q)){
+    $cat_options[] = $row['category_name'];
+}
 if (isset($_POST['add'])) {
+    $expense_description = $_POST['expense_description'];
     $expenseamount = $_POST['expenseamount'];
     $expensedate = $_POST['expensedate'];
     $expensecategory = $_POST['expensecategory'];
 
-    $expenses = "INSERT INTO expenses (user_id, expense,expensedate,expensecategory) VALUES ('$userid', '$expenseamount','$expensedate','$expensecategory')";
+    // $expenses = "INSERT INTO expenses (user_id, expense,expensedate,expensecategory) VALUES ('$userid', '$expenseamount','$expensedate','$expensecategory')";
+    $expenses = "INSERT INTO expenses (expense_description, expense_value, made_in_dt, created_at_ts, expense_category, id_user) VALUES('$expense_description', $expenseamount, '$expensedate', current_timestamp(), $expensecategory, $userid)";
     $result = mysqli_query($con, $expenses) or die("Something Went Wrong!");
     header('location: add_expense.php');
 }
@@ -175,7 +184,13 @@ if (isset($_GET['delete'])) {
                             <div class="form-group row">
                                 <label for="expenseamount" class="col-sm-6 col-form-label"><b>Valor (R$)</b></label>
                                 <div class="col-md-6">
-                                    <input type="number" class="form-control col-sm-12" value="<?php echo $expenseamount; ?>" id="expenseamount" name="expenseamount" required>
+                                    <input type="decimal" class="form-control col-sm-12" value="<?php echo $expenseamount; ?>" id="expenseamount" name="expenseamount" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="expense_description" class="col-sm-6 col-form-label"><b>Descrição</b></label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control col-sm-12" value="<?php echo $expense_description; ?>" id="expense_description" name="expense_description" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -184,12 +199,23 @@ if (isset($_GET['delete'])) {
                                     <input type="date" class="form-control col-sm-12" value="<?php echo $expensedate; ?>" name="expensedate" id="expensedate" required>
                                 </div>
                             </div>
-                            <fieldset class="form-group">
+                            <div class="form-group row">
                                 <div class="row">
                                     <legend class="col-form-label col-sm-6 pt-0"><b>Categoria</b></legend>
                                     <div class="col-md">
 
-                                        <div class="form-check">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>Selecione a categoria</option>
+                                        <?php
+                                            
+                                            foreach ($cat_options as $index => $category_name) {
+                                                echo '<option value="' . $index . '">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
+                                            }
+
+                                        ?>
+                                    </select>
+
+                                        <!-- <div class="form-check">
                                             <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory4" value="Saúde" <?php echo ($expensecategory == 'Saúde') ? 'checked' : '' ?>>
                                             <label class="form-check-label" for="expensecategory4">
                                                 Saúde
@@ -237,10 +263,10 @@ if (isset($_GET['delete'])) {
                                             <label class="form-check-label" for="expensecategory5">
                                                 Outros
                                             </label>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
-                            </fieldset>
+                                </div>
                             <div class="form-group row">
                                 <div class="col-md-12 text-right">
                                     <?php if ($update == true) : ?>
@@ -248,7 +274,7 @@ if (isset($_GET['delete'])) {
                                     <?php elseif ($del == true) : ?>
                                         <button class="btn btn-lg btn-block btn-danger" style="border-radius: 0%;" type="submit" name="delete">Deletar</button>
                                     <?php else : ?>
-                                        <button type="submit" name="add" class="btn btn-lg btn-block btn-success" style="border-radius: 0%;">Adicionar Gasto</button>
+                                        <button type="submit" name="add" class="btn btn-lg btn-block btn-danger" style="border-radius: 0%;">Adicionar Gasto</button>
                                     <?php endif ?>
                                 </div>
                             </div>
