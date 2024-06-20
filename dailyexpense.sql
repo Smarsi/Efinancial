@@ -1,85 +1,45 @@
--- phpMyAdmin SQL Dump
--- version 4.6.5.2
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Jun 23, 2021 at 07:16 PM
--- Server version: 5.6.21
--- PHP Version: 5.6.3
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `dailyexpense`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `expenses`
---
-
-CREATE TABLE `expenses` (
-  `expense_id` int(20) NOT NULL,
-  `user_id` varchar(15) NOT NULL,
-  `expense` int(20) NOT NULL,
-  `expensedate` varchar(15) NOT NULL,
-  `expensecategory` varchar(50) NOT NULL
+CREATE TABLE users (
+  id_user INT PRIMARY KEY AUTO_INCREMENT,
+  user_firstname VARCHAR(50) NOT NULL,
+  user_lastname VARCHAR(25) NOT NULL,
+  user_email VARCHAR(50) NOT NULL,
+  user_profile_path VARCHAR(50) NOT NULL DEFAULT 'default_profile.png',
+  user_password VARCHAR(50) NOT NULL,
+  created_at_dt DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `firstname` varchar(50) NOT NULL,
-  `lastname` varchar(25) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `profile_path` varchar(50) NOT NULL DEFAULT 'default_profile.png',
-  `password` varchar(50) NOT NULL,
-  `trn_date` datetime NOT NULL
+CREATE TABLE categories (
+  id_category INT PRIMARY KEY AUTO_INCREMENT,
+  category_name VARCHAR(20),
+  category_type VARCHAR(10),
+  created_at_ts TIMESTAMP,
+  id_user INT,
+  
+  CONSTRAINT categories_fk_01 FOREIGN KEY (id_user) REFERENCES users(id_user)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Indexes for dumped tables
---
+CREATE TABLE expenses (
+  id_expense INT PRIMARY KEY AUTO_INCREMENT,
+  expense_description VARCHAR(255),
+  expense_value DECIMAL(10,2) NOT NULL,
+  made_in_dt DATE,
+  created_at_ts TIMESTAMP,
+  expense_category INT NOT NULL,
+  id_user INT NOT NULL,
+  
+  CONSTRAINT expenses_fk_01 FOREIGN KEY (expense_category) REFERENCES categories(id_category),
+  CONSTRAINT expenses_fk_02 FOREIGN KEY (id_user) REFERENCES users(id_user)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Indexes for table `expenses`
---
-ALTER TABLE `expenses`
-  ADD PRIMARY KEY (`expense_id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `expenses`
---
-ALTER TABLE `expenses`
-  MODIFY `expense_id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE revenues (
+  id_revenue INT PRIMARY KEY AUTO_INCREMENT,
+  revenue_description VARCHAR(255),
+  revenue_value DECIMAL(10,2),
+  made_in_dt DATE,
+  created_at_ts TIMESTAMP,
+  revenue_category INT,
+  id_user INT,
+  
+  CONSTRAINT revenues_fk_01 FOREIGN KEY (revenue_category) REFERENCES categories(id_category),
+  CONSTRAINT revenues_fk_02 FOREIGN KEY (id_user) REFERENCES users(id_user)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

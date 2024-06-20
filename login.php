@@ -8,7 +8,7 @@ if (isset($_POST['email'])) {
   $email = mysqli_real_escape_string($con, $email);
   $password = stripslashes($_REQUEST['password']);
   $password = mysqli_real_escape_string($con, $password);
-  $query = "SELECT * FROM `users` WHERE email='$email'and password='" . md5($password) . "'";
+  $query = "SELECT * FROM `users` WHERE user_email='$email'and user_password='" . md5($password) . "'";
   $result = mysqli_query($con, $query) or die(mysqli_error($con));
   $rows = mysqli_num_rows($result);
   if ($rows == 1) {

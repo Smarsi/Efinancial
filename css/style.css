@@ -23,6 +23,26 @@ body {
   vertical-align: text-bottom;
   
 }
+.feather-big-positive {
+  width: 50px;
+  height: 50px;
+  stroke: #32a800;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  vertical-align: text-bottom;
+}
+.feather-big-negative {
+  width: 50px!important;
+  height: 50px!important;
+  stroke: #dc3545!important;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  vertical-align: text-bottom;
+}
 .list-group {
   background-color: #ffffff;
 }

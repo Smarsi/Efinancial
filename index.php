@@ -1,10 +1,11 @@
 <?php
   include("session.php");
-  $exp_category_dc = mysqli_query($con, "SELECT expensecategory FROM expenses WHERE user_id = '$userid' GROUP BY expensecategory");
-  $exp_amt_dc = mysqli_query($con, "SELECT SUM(expense) FROM expenses WHERE user_id = '$userid' GROUP BY expensecategory");
+  // $exp_category_dc = mysqli_query($con, "SELECT expensecategory FROM expenses WHERE user_id = '$userid' GROUP BY expensecategory");
+  $exp_category_dc = mysqli_query($con, "SELECT category_name FROM categories;");
+  $exp_amt_dc = mysqli_query($con, "SELECT SUM(expense_value) FROM expenses WHERE id_user = '$userid' GROUP BY expense_category");
 
-  $exp_date_line = mysqli_query($con, "SELECT expensedate FROM expenses WHERE user_id = '$userid' GROUP BY expensedate");
-  $exp_amt_line = mysqli_query($con, "SELECT SUM(expense) FROM expenses WHERE user_id = '$userid' GROUP BY expensedate");
+  $exp_date_line = mysqli_query($con, "SELECT made_in_dt FROM expenses WHERE id_user = '$userid' GROUP BY made_in_dt;");
+  $exp_amt_line = mysqli_query($con, "SELECT SUM(expense_value) FROM expenses WHERE id_user = '$userid' GROUP BY made_in_dt");
 
 ?>
 <!DOCTYPE html>
@@ -36,6 +37,18 @@
     .card a:hover {
       color: #28a745;
       text-decoration: dotted;
+    }
+
+    .feather-big-positive {
+      stroke: #32a800!important;
+      width: 50px;
+      height: 50px;
+    }
+
+    .feather-big-negative {
+      stroke: #dc3545!important;
+      width: 50px;
+      height: 50px;
     }
   </style>
 
@@ -100,13 +113,23 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col text-center">
-                    <a href="add_expense.php"><i data-feather="plus" class="feather-big" stroke="green"></i>
+                    <a href="add_expense.php"><i data-feather="plus" class="feather-big-negative" stroke="red"></i>
                       <p>Adicionar Gastos</p>
                     </a>
                   </div>
                   <div class="col text-center">
-                    <a href="manage_expense.php"><i data-feather="dollar-sign" class="feather-big"></i>
+                    <a href="manage_expense.php"><i data-feather="dollar-sign" stroke="red" class="feather-big-negative"></i>
                       <p>Gerenciar Gastos</p>
+                    </a>
+                  </div>
+                  <div class="col text-center">
+                    <a href="profile.php"><i data-feather="plus" class="feather-big-positive"></i>
+                      <p>Adicionar Receita</p>
+                    </a>
+                  </div>
+                  <div class="col text-center">
+                    <a href="profile.php"><i data-feather="dollar-sign" class="feather-big-positive"></i>
+                      <p>Gerenciar Receitas</p>
                     </a>
                   </div>
                   <div class="col text-center">
@@ -122,7 +145,7 @@
 
         <!-- Cards de Gastos Consolidados -->
 
-        <div class="container-fluid">
+        <!-- <div class="container-fluid">
             <div class="row">
                 <div class="card col text-center">
                     <div class="counter bg-danger" style="color:white;">
@@ -159,7 +182,7 @@
                 </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <h3 class="mt-4">Consolidado de Gastos</h3>
         <div class="row">

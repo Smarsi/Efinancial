@@ -17,7 +17,8 @@ if (isset($_REQUEST['firstname'])) {
 
     $trn_date = date("Y-m-d H:i:s");
 
-    $query = "INSERT into `users` (firstname, lastname, password, email, trn_date) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email', '$trn_date')";
+    $query = "INSERT INTO users (user_firstname, user_lastname, user_email, user_profile_path, user_password, created_at_dt) VALUES('$firstname', '$lastname', '$email', 'default_profile.png', '" . md5($password) . "', '$trn_date')";
+    // $query = "INSERT into `users` (firstname, lastname, password, email, trn_date) VALUES ('$firstname','$lastname', '" . md5($password) . "', '$email', '$trn_date')";
     $result = mysqli_query($con, $query);
     if ($result) {
       header("Location: login.php");

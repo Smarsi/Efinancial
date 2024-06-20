@@ -1,12 +1,12 @@
 <?php
 include("session.php");
-$exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$userid'");
+$exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE id_user = '$userid'");
 
 if (isset($_POST['save'])) {
     $fname = $_POST['first_name'];
     $lname = $_POST['last_name'];
 
-    $sql = "UPDATE users SET firstname = '$fname', lastname='$lname' WHERE user_id='$userid'";
+    $sql = "UPDATE users SET user_firstname = '$fname', user_lastname='$lname' WHERE id_user='$userid'";
     if (mysqli_query($con, $sql)) {
         echo "Records were updated successfully.";
     } else {
