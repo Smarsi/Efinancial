@@ -1,3 +1,7 @@
+create database dailyexpense;
+
+use dailyexpense;
+
 CREATE TABLE users (
   id_user INT PRIMARY KEY AUTO_INCREMENT,
   user_firstname VARCHAR(50) NOT NULL,
