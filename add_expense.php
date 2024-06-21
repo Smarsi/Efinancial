@@ -6,6 +6,7 @@ $expenseamount = "";
 $expense_description="";
 $expensedate = date("Y-m-d");
 $expensecategory = "Outros";
+$alreadySelectedOption = null;
 $cat_options = [];
 $optionsquery = "select category_name from categories where id_user = $userid";
 $options_q = mysqli_query($con, $optionsquery);
@@ -74,12 +75,13 @@ if (isset($_POST['delete'])) {
 if (isset($_GET['edit'])) {
     $id = $_GET['edit'];
     $update = true;
-    $record = mysqli_query($con, "SELECT * FROM expenses WHERE user_id='$userid' AND expense_id=$id");
+    $record = mysqli_query($con, "SELECT * FROM expenses WHERE id_user='$userid' AND id_expense=$id");
     if (mysqli_num_rows($record) == 1) {
         $n = mysqli_fetch_array($record);
-        $expenseamount = $n['expense'];
-        $expensedate = $n['expensedate'];
-        $expensecategory = $n['expensecategory'];
+        $expenseamount = $n['expense_value'];
+        $expense_description = $n['expense_description'];
+        $expensedate = $n['made_in_dt'];
+        $expensecategory = $n['expense_category'];
     } else {
         echo ("WARNING: AUTHORIZATION ERROR: Trying to Access Unauthorized data");
     }
@@ -206,10 +208,15 @@ if (isset($_GET['delete'])) {
                                     <legend class="col-form-label col-sm-6 pt-0"><b>Categoria</b></legend>
                                     <div class="col-md">
                                         <select class="form-select" name="expensecategory" aria-label="expensecategory" id="expensecategory" required>
-                                            <option selected>Selecione a categoria</option>
+                                            <option <?php if(!$alreadySelectedOption){echo "selected";} ?>>-- Selecione a categoria --</option>
                                             <?php
                                                 foreach ($cat_options as $index => $category_name) {
-                                                    echo '<option value="' . $index+1 . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
+                                                    $item_value = $index + 1;
+                                                    if($expensecategory == $item_value){
+                                                        echo '<option selected value="' . $index+1 . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
+                                                    } else{
+                                                        echo '<option value="' . $index+1 . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
+                                                    }
                                                 }
                                             ?>
                                         </select>

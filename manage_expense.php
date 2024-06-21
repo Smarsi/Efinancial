@@ -1,6 +1,6 @@
 <?php
 include("session.php");
-$exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$userid'");
+$exp_fetched = mysqli_query($con, "select e.*, c.category_name from expenses e, categories c where e.expense_category = c.id_category AND e.id_user = $userid;");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -96,14 +96,14 @@ $exp_fetched = mysqli_query($con, "SELECT * FROM expenses WHERE user_id = '$user
                             <?php $count=1; while ($row = mysqli_fetch_array($exp_fetched)) { ?>
                                 <tr>
                                     <td><?php echo $count;?></td>
-                                    <td><?php echo $row['expensedate']; ?></td>
-                                    <td><?php echo 'R$ '.$row['expense']; ?></td>
-                                    <td><?php echo $row['expensecategory']; ?></td>
+                                    <td><?php echo $row['made_in_dt']; ?></td>
+                                    <td><?php echo 'R$ '.$row['expense_value']; ?></td>
+                                    <td><?php echo $row['category_name']; ?></td>
                                     <td class="text-center">
-                                        <a href="add_expense.php?edit=<?php echo $row['expense_id']; ?>" class="btn btn-primary btn-sm" style="border-radius:0%;">Editar</a>
+                                        <a href="add_expense.php?edit=<?php echo $row['id_expense']; ?>" class="btn btn-primary btn-sm" style="border-radius:0%;">Editar</a>
                                     </td>
                                     <td class="text-center">
-                                        <a href="add_expense.php?delete=<?php echo $row['expense_id']; ?>" class="btn btn-danger btn-sm" style="border-radius:0%;">Deletar</a>
+                                        <a href="add_expense.php?delete=<?php echo $row['id_expense']; ?>" class="btn btn-danger btn-sm" style="border-radius:0%;">Deletar</a>
                                     </td>
                                 </tr>
                             <?php $count++; } ?>
