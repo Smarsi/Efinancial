@@ -139,9 +139,11 @@ if (isset($_GET['delete'])) {
       </div>
       <div class="sidebar-heading">Gerenciamento</div>
       <div class="list-group list-group-flush">
-        <a href="index.php" class="list-group-item list-group-item-action"><span data-feather="home"></span> Home</a>
-        <a href="add_expense.php" class="list-group-item list-group-item-action sidebar-active"><span data-feather="plus"></span> Adicionar Gastos</a>
+        <a href="index.php" class="list-group-item list-group-item-action sidebar-active"><span data-feather="home"></span> Home</a>
+        <a href="add_expense.php" class="list-group-item list-group-item-action "><span data-feather="plus"></span> Adicionar Gastos</a>
         <a href="manage_expense.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Gerenciar Gastos</a>
+        <a href="add_revenue.php" class="list-group-item list-group-item-action "><span data-feather="plus"></span> Adicionar Receita</a>
+        <a href="manage_revenue.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Gerenciar Receitas</a>
       </div>
       <div class="sidebar-heading">Configurações</div>
       <div class="list-group list-group-flush">
