@@ -1,11 +1,32 @@
 <?php
   include("session.php");
-  // $exp_category_dc = mysqli_query($con, "SELECT expensecategory FROM expenses WHERE user_id = '$userid' GROUP BY expensecategory");
-  $exp_category_dc = mysqli_query($con, "SELECT category_name FROM categories where category_type = 'expense' AND id_user=$userid;");
-  $exp_amt_dc = mysqli_query($con, "SELECT SUM(expense_value) FROM expenses WHERE id_user = '$userid' GROUP BY expense_category");
+  $labels_per_categorie_result = mysqli_query($con, "select c.category_name from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = 1 group by e.expense_category;");
+  $values_per_categorie_result = mysqli_query($con, "select SUM(e.expense_value) as expenses_names from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = 1 group by e.expense_category;");
 
-  $exp_date_line = mysqli_query($con, "SELECT made_in_dt FROM expenses WHERE id_user = '$userid' GROUP BY made_in_dt;");
-  $exp_amt_line = mysqli_query($con, "SELECT SUM(expense_value) FROM expenses WHERE id_user = '$userid' GROUP BY made_in_dt");
+  while ($row = mysqli_fetch_assoc($labels_per_categorie_result)) {
+      $labels_per_categorie[] = $row['category_name'];
+  }
+
+  while ($row = mysqli_fetch_assoc($values_per_categorie_result)) {
+    $values_per_categorie[] = floatval($row['expenses_names']); // Converter para float se necessário
+  }
+
+  print_r($labels_per_categorie);
+  print_r($values_per_categorie);
+
+  $labels_per_day_result = mysqli_query($con, "SELECT DAY(made_in_dt) as e_day FROM expenses WHERE MONTH(made_in_dt) = MONTH(current_date()) AND id_user = $userid GROUP BY made_in_dt;");
+  $values_per_day_result = mysqli_query($con, "SELECT SUM(expense_value) as e_value FROM expenses WHERE MONTH(made_in_dt) = MONTH(current_date()) AND id_user = $userid GROUP BY made_in_dt;");
+ 
+  while ($row = mysqli_fetch_assoc($labels_per_day_result)) {
+    $labels_per_day[] = $row['e_day'];
+  }
+
+  while ($row = mysqli_fetch_assoc($values_per_day_result)) {
+    $values_per_day[] = $row['e_value'];
+  }
+
+  print_r($labels_per_day);
+  print_r($values_per_day);
 
   $total_revenues_query = mysqli_query($con, "select sum(revenue_value) as total_revenues from revenues where MONTH(made_in_dt) = MONTH(CURRENT_DATE) AND YEAR(made_in_dt) = YEAR(CURRENT_DATE) AND id_user = $userid;");
   if ($total_revenues_query) {
@@ -46,6 +67,8 @@
 
   <!-- Feather JS for Icons -->
   <script src="js/feather.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartist/dist/chartist.min.js"></script>
   <style>
     .card a {
       color: #000;
@@ -235,8 +258,6 @@
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
     <!-- /#page-content-wrapper -->
@@ -259,31 +280,55 @@
     feather.replace()
   </script>
   <script>
+    function generateRandomColors(numColors) {
+      var colors = [];
+      for (var i = 0; i < numColors; i++) {
+          var color = '#' + Math.floor(Math.random() * 16777215).toString(16); // Gerar cor hexadecimal aleatória
+          colors.push(color);
+      }
+      return colors;
+    }
+
+    // CATEGORY EXPENSES CHART
+    var category_used_colors = generateRandomColors(<?php echo count($labels_per_categorie); ?>);
     var ctx = document.getElementById('expense_category_pie').getContext('2d');
+    console.log(ctx);
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: <?php echo json_encode($labels_per_categorie); ?>,
+        datasets: [{
+          label: 'Gastos por Categoria',
+          data: <?php echo json_encode($values_per_categorie); ?>,
+          backgroundColor: category_used_colors,
+          borderWidth: 6
+        }]
+      },
+      options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    min: 0
+                }
+            }]
+        }
+    }
+    });
+    // CATEGORY EXPENSES CHART ENDS HERE
+
+    // DAILY EXPENSES CHART
+    var category_used_colors = generateRandomColors(<?php echo count($labels_per_categorie); ?>);
+    var ctx = document.getElementById('expense_line').getContext('2d');
+    console.log(ctx);
     var myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [<?php while ($a = mysqli_fetch_array($exp_category_dc)) {
-                    echo '"' . $a['expense_category'] . '",';
-                  } ?>],
+        labels: <?php echo json_encode($labels_per_day); ?>,
         datasets: [{
-          label: 'Gastos por Categoria',
-          data: [<?php while ($b = mysqli_fetch_array($exp_amt_dc)) {
-                    echo '"' . $b['SUM(expense)'] . '",';
-                  } ?>],
-          backgroundColor: [
-            '#6f42c1',
-            '#dc3545',
-            '#28a745',
-            '#007bff',
-            '#ffc107',
-            '#20c997',
-            '#17a2b8',
-            '#fd7e14',
-            '#e83e8c',
-            '#6610f2'
-          ],
-          borderWidth: 1
+          label: 'Gastos por Dia',
+          data: <?php echo json_encode($values_per_day); ?>,
+          backgroundColor: category_used_colors,
+          borderWidth: 6
         }]
       },
       options: {
@@ -296,48 +341,7 @@
         }
     }
     });
-
-    var line = document.getElementById('expense_line').getContext('2d');
-    var myChart = new Chart(line, {
-      type: 'line',
-      data: {
-        labels: [<?php while ($c = mysqli_fetch_array($exp_date_line)) {
-                    echo '"' . $c['expensedate'] . '",';
-                  } ?>],
-        datasets: [{
-          label: 'Gastos por Mês (Ano)',
-          data: [<?php while ($d = mysqli_fetch_array($exp_amt_line)) {
-                    echo '"' . $d['SUM(expense)'] . '",';
-                  } ?>],
-          borderColor: [
-            '#adb5bd'
-          ],
-          backgroundColor: [
-            '#6f42c1',
-            '#dc3545',
-            '#28a745',
-            '#007bff',
-            '#ffc107',
-            '#20c997',
-            '#17a2b8',
-            '#fd7e14',
-            '#e83e8c',
-            '#6610f2'
-          ],
-          fill: false,
-          borderWidth: 2
-        }]
-      },
-      options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    min: 0
-                }
-            }]
-        }
-    }
-    });
+    // DAILY EXPENSES CHART ENDS HERE
   </script>
 </body>
 
