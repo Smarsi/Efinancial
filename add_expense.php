@@ -18,6 +18,14 @@ if (count($cat_options) == 0){
     $disabled = true;
 }
 
+function formatFinancialValue($value) {
+    $value = trim($value);
+    if (strpos($value, ',') !== false) {
+        $value = str_replace(',', '.', $value);
+    }
+    return $value;
+}
+
 if (isset($_POST['add'])) {
     $expense_description = $_POST['expense_description'];
     $expenseamount = floatval($_POST['expenseamount']);
@@ -48,11 +56,12 @@ if (isset($_POST['add'])) {
 if (isset($_POST['update'])) {
     $id = $_GET['edit'];
     $expense_description = $_POST['expense_description'];
-    $expenseamount = floatval($_POST['expenseamount']);
+    $expenseamount = $_POST['expenseamount'];
+    $formated_amount = formatFinancialValue($expenseamount);
     $expensedate = $_POST['expensedate'];
     $expensecategory = $_POST['expensecategory'];
 
-    $sql = "UPDATE expenses SET expense_value='$expenseamount', made_in_dt='$expensedate', expense_category='$expensecategory' WHERE id_user='$userid' AND id_expense='$id'";
+    $sql = "UPDATE expenses SET expense_value='$formated_amount', expense_description='$expense_description', made_in_dt='$expensedate', expense_category='$expensecategory' WHERE id_user='$userid' AND id_expense='$id'";
     if (mysqli_query($con, $sql)) {
         echo "Records were updated successfully.";
     } else {
