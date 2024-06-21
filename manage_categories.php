@@ -106,7 +106,7 @@ $exp_fetched = mysqli_query($con, "select * from categories where id_user=$useri
                                 </tr>
                             <?php $count++; } ?>
                         </table>
-                        <a href="add_category.php"><button class="btn btn-lg btn-block btn-success" style="border-radius: 0%;" type="submit" name="update"><span data-feather="plus"></span>Adicionar Categoria</button></a>
+                        <a href="add_category.php"><button class="btn btn-lg btn-block btn-success" style="border-radius: 0%;" type="submit" name="update"><span data-feather="plus"></span> Adicionar Categoria</button></a>
                     </div>
 
                 </div>
