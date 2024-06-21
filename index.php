@@ -1,11 +1,29 @@
 <?php
   include("session.php");
   // $exp_category_dc = mysqli_query($con, "SELECT expensecategory FROM expenses WHERE user_id = '$userid' GROUP BY expensecategory");
-  $exp_category_dc = mysqli_query($con, "SELECT category_name FROM categories;");
+  $exp_category_dc = mysqli_query($con, "SELECT category_name FROM categories where category_type = 'expense' AND id_user=$userid;");
   $exp_amt_dc = mysqli_query($con, "SELECT SUM(expense_value) FROM expenses WHERE id_user = '$userid' GROUP BY expense_category");
 
   $exp_date_line = mysqli_query($con, "SELECT made_in_dt FROM expenses WHERE id_user = '$userid' GROUP BY made_in_dt;");
   $exp_amt_line = mysqli_query($con, "SELECT SUM(expense_value) FROM expenses WHERE id_user = '$userid' GROUP BY made_in_dt");
+
+  $total_revenues_query = mysqli_query($con, "select sum(revenue_value) as total_revenues from revenues where MONTH(made_in_dt) = MONTH(CURRENT_DATE) AND YEAR(made_in_dt) = YEAR(CURRENT_DATE) AND id_user = $userid;");
+  if ($total_revenues_query) {
+    $total_revenues_row = mysqli_fetch_assoc($total_revenues_query);
+    $total_revenues = $total_revenues_row['total_revenues'];
+  } else {
+    $total_revenues = "0.00";
+  }
+    
+  $total_expenses_query = mysqli_query($con, "select sum(expense_value) as total_expenses from expenses where MONTH(made_in_dt) = MONTH(CURRENT_DATE) AND YEAR(made_in_dt) = YEAR(CURRENT_DATE) AND id_user = $userid;");
+  if ($total_expenses_query) {
+    $total_expenses_row = mysqli_fetch_assoc($total_expenses_query);
+    $total_expenses = $total_expenses_row['total_expenses'];
+  } else {
+      $total_expenses = "0.00";
+  }
+
+  $balance = floatval($total_revenues) - floatval($total_expenses);
 
 ?>
 <!DOCTYPE html>
@@ -147,46 +165,54 @@
 
         <!-- Cards de Gastos Consolidados -->
 
-        <!-- <div class="container-fluid">
+        <div class="container-fluid">
             <div class="row">
-                <div class="card col text-center">
-                    <div class="counter bg-danger" style="color:white;">
-                        <p><i class="fas fa-tasks"></i></p>
-                        <h3>
-                            Today's Expenses
-                        </h3>
-                        <p style="font-size: 1.2em;">
-                            <?php echo "teste 1" ?>
-                        </p>
-                    </div>
+              <div class="card col text-center">
+                <div class="counter bg-success" style="color:white;">
+                  <p><i class="fas fa-undo-alt"></i></p>
+                    <h3>
+                      Receitas deste mês
+                    </h3>
+                    <p style="font-size: 1.2em;">
+                      <?php echo "R$ $total_revenues" ?>
+                    </p>
                 </div>
-                <div class="card col text-center">
-                    <div class="counter bg-primary" style="color:white;">
-                        <p><i class="fas fa-undo-alt"></i></p>
-                        <h3>
-                            Yesterday's Expenses
-                        </h3>
-                        <p style="font-size: 1.2em;">
-                            <?php echo "teste2" ?>
-                        </p>
-                    </div>
+              </div>
+              <div class="card col text-center">
+                <div class="counter bg-danger" style="color:white;">
+                  <p><i class="fas fa-tasks"></i></p>
+                  <h3>
+                    Despesas deste mês
+                  </h3>
+                  <p style="font-size: 1.2em;">
+                      <?php echo "R$ $total_expenses" ?>
+                  </p>
                 </div>
-                <div class="card col text-center">
-                    <div class="counter bg-warning" style="color:white;">
-                        <p><i class="fas fa-calendar-week"></i></p>
-                        <h3>
-                            Last 7 day's Expenses
-                        </h3>
-                        <p style="font-size: 1.2em;">
-                            <?php echo "teste3" ?>
-                        </p>
-                    </div>
+              </div>
+              <div class="card col text-center">
+                <div class="counter <?php if ($balance > 0){echo "bg-success";} else{echo "bg-danger";} ?>" style="color:white;">
+                  <p><i class="fas fa-calendar-week"></i></p>
+                  <h3>
+                    Balanço deste mês
+                  </h3>
+                  <p style="font-size: 1.2em;">
+                    <?php echo "R$ $balance" ?>
+                  </p>
                 </div>
+              </div>
             </div>
           </div>
-        </div> -->
+        </div>
 
         <h3 class="mt-4">Consolidado de Gastos</h3>
+        <!-- <div class="row">
+          <div class="col-md">
+            <legend><b>Selecione o mês</b></legend>
+          </div>
+          <div class="col-md">
+            <select class="form-select" name="range" aria-label="range" id="range" required></select>
+          </div>
+        </div> -->
         <div class="row">
           <div class="col-md">
             <div class="card">
@@ -238,7 +264,7 @@
       type: 'bar',
       data: {
         labels: [<?php while ($a = mysqli_fetch_array($exp_category_dc)) {
-                    echo '"' . $a['expensecategory'] . '",';
+                    echo '"' . $a['expense_category'] . '",';
                   } ?>],
         datasets: [{
           label: 'Gastos por Categoria',
