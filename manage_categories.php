@@ -1,6 +1,6 @@
 <?php
 include("session.php");
-$exp_fetched = mysqli_query($con, "select r.*, c.category_name from revenues r, categories c where r.revenue_category = c.id_category AND r.id_user = $userid;");
+$exp_fetched = mysqli_query($con, "select * from categories where id_user=$userid");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,8 +43,8 @@ $exp_fetched = mysqli_query($con, "select r.*, c.category_name from revenues r, 
         <a href="manage_expense.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Gerenciar Gastos</a>
         <a href="add_revenue.php" class="list-group-item list-group-item-action "><span data-feather="plus"></span> Adicionar Receita</a>
         <a href="manage_revenue.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Gerenciar Receitas</a>
-        <a href="manage_categories.php" class="list-group-item list-group-item-action "><span data-feather="settings"></span> Minhas Categorias</a>
-      </div>
+        <a href="manage_categories.php" class="list-group-item list-group-item-action "><span data-feather="settings"></span> Minhas Categorias</a>  
+    </div>
       <div class="sidebar-heading">Configurações</div>
       <div class="list-group list-group-flush">
         <a href="profile.php" class="list-group-item list-group-item-action "><span data-feather="user"></span> Perfil</a>
@@ -80,7 +80,7 @@ $exp_fetched = mysqli_query($con, "select r.*, c.category_name from revenues r, 
 </nav>
 
             <div class="container-fluid">
-                <h3 class="mt-4 text-center">Gerenciar Receitas</h3>
+                <h3 class="mt-4 text-center">Gerenciar Categorias</h3>
                 <hr>
                 <div class="row justify-content-center">
 
@@ -89,28 +89,24 @@ $exp_fetched = mysqli_query($con, "select r.*, c.category_name from revenues r, 
                             <thead>
                                 <tr class="text-center">
                                     <th>#</th>
-                                    <th>Data</th>
-                                    <th>Valor</th>
-                                    <th>Categoria</th>
+                                    <th>Nome</th>
+                                    <th>Tipo</th>
                                     <th colspan="2">Ação</th>
                                 </tr>
                             </thead>
 
                             <?php $count=1; while ($row = mysqli_fetch_array($exp_fetched)) { ?>
                                 <tr>
-                                    <td><?php echo $count;?></td>
-                                    <td><?php echo $row['made_in_dt']; ?></td>
-                                    <td><?php echo 'R$ '.$row['revenue_value']; ?></td>
+                                    <td><?php echo $row['id_category']; ?></td>
                                     <td><?php echo $row['category_name']; ?></td>
+                                    <td><?php if($row['category_type'] == 'revenue'){echo "Receita";} if($row['category_type'] == 'expense'){echo "Despesa";} ?></td>
                                     <td class="text-center">
-                                        <a href="add_revenue.php?edit=<?php echo $row['id_revenue']; ?>" class="btn btn-primary btn-sm" style="border-radius:0%;">Editar</a>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="add_revenue.php?delete=<?php echo $row['id_revenue']; ?>" class="btn btn-danger btn-sm" style="border-radius:0%;">Deletar</a>
+                                        <a href="add_category.php?update=<?php echo $row['id_category']; ?>" class="btn btn-primary btn-sm" style="border-radius:0%;">Atualizar</a>
                                     </td>
                                 </tr>
                             <?php $count++; } ?>
                         </table>
+                        <a href="add_category.php"><button class="btn btn-lg btn-block btn-success" style="border-radius: 0%;" type="submit" name="update"><span data-feather="plus"></span>Adicionar Categoria</button></a>
                     </div>
 
                 </div>
@@ -139,4 +135,4 @@ $exp_fetched = mysqli_query($con, "select r.*, c.category_name from revenues r, 
 
 </body>
 
-</html>
+</html> 

@@ -113,6 +113,7 @@
         <a href="manage_expense.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Gerenciar Gastos</a>
         <a href="add_revenue.php" class="list-group-item list-group-item-action "><span data-feather="plus"></span> Adicionar Receita</a>
         <a href="manage_revenue.php" class="list-group-item list-group-item-action "><span data-feather="dollar-sign"></span> Gerenciar Receitas</a>
+        <a href="manage_categories.php" class="list-group-item list-group-item-action "><span data-feather="settings"></span> Minhas Categorias</a>
       </div>
       <div class="sidebar-heading">Configurações</div>
       <div class="list-group list-group-flush">
