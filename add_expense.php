@@ -17,8 +17,6 @@ if (isset($_POST['add'])) {
     $expense_description = $_POST['expense_description'];
     $expenseamount = floatval($_POST['expenseamount']);
     $expensedate = $_POST['expensedate'];
-    print_r($_POST);
-    print_r($expenseamount);
     $expensecategory = $_POST['expensecategory'];
 
     // $expenses = "INSERT INTO expenses (user_id, expense,expensedate,expensecategory) VALUES ('$userid', '$expenseamount','$expensedate','$expensecategory')";

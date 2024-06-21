@@ -13,13 +13,10 @@ $options_q = mysqli_query($con, $optionsquery);
 while($row = mysqli_fetch_assoc($options_q)){
     $cat_options[$row['id_category']] = $row['category_name'];
 }
-print_r($cat_options);
 if (isset($_POST['add'])) {
     $revenue_description = $_POST['revenue_description'];
     $expenseamount = floatval($_POST['expenseamount']);
     $expensedate = $_POST['expensedate'];
-    print_r($_POST);
-    print_r($expenseamount);
     $expensecategory = $_POST['expensecategory'];
 
     $expenses = "INSERT INTO revenues (revenue_description, revenue_value, made_in_dt, created_at_ts, revenue_category, id_user) VALUES('$revenue_description', $expenseamount, '$expensedate', current_timestamp(), $expensecategory, $userid)";
