@@ -31,7 +31,7 @@ if (isset($_POST['but_upload'])) {
     if (in_array($imageFileType, $extensions_arr)) {
 
         // Insert record
-        $query = "UPDATE users SET profile_path = '$name' WHERE user_id='$userid'";
+        $query = "UPDATE users SET user_profile_path = '$name' WHERE id_user='$userid'";
         mysqli_query($con, $query);
 
         // Upload file
