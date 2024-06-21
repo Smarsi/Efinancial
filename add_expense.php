@@ -63,7 +63,7 @@ if (isset($_POST['delete'])) {
     $expensedate = $_POST['expensedate'];
     $expensecategory = $_POST['expensecategory'];
 
-    $sql = "DELETE FROM expenses WHERE user_id='$userid' AND expense_id='$id'";
+    $sql = "DELETE FROM expenses WHERE id_user='$userid' AND id_expense='$id'";
     if (mysqli_query($con, $sql)) {
         echo "Records were updated successfully.";
     } else {
@@ -90,13 +90,14 @@ if (isset($_GET['edit'])) {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $del = true;
-    $record = mysqli_query($con, "SELECT * FROM expenses WHERE user_id='$userid' AND expense_id=$id");
+    $record = mysqli_query($con, "SELECT * FROM expenses WHERE id_user='$userid' AND id_expense=$id");
 
     if (mysqli_num_rows($record) == 1) {
         $n = mysqli_fetch_array($record);
-        $expenseamount = $n['expense'];
-        $expensedate = $n['expensedate'];
-        $expensecategory = $n['expensecategory'];
+        $expenseamount = $n['expense_value'];
+        $expense_description = $n['expense_description'];
+        $expensedate = $n['made_in_dt'];
+        $expensecategory = $n['expense_category'];
     } else {
         echo ("WARNING: AUTHORIZATION ERROR: Trying to Access Unauthorized data");
     }
