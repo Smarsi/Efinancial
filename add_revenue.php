@@ -57,11 +57,7 @@ if (isset($_POST['update'])) {
 
 if (isset($_POST['delete'])) {
     $id = $_GET['delete'];
-    $expenseamount = $_POST['expenseamount'];
-    $expensedate = $_POST['expensedate'];
-    $expensecategory = $_POST['expensecategory'];
-
-    $sql = "DELETE FROM expenses WHERE id_user='$userid' AND id_expense='$id'";
+    $sql = "DELETE FROM revenues WHERE id_user='$userid' AND id_revenue='$id'";
     if (mysqli_query($con, $sql)) {
         echo "Records were updated successfully.";
     } else {
