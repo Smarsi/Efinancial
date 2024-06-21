@@ -88,7 +88,7 @@ if (isset($_GET['edit'])) {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     $del = true;
-    $record = mysqli_query($con, "SELECT * FROM expenses WHERE id_user='$userid' AND id_expense=$id");
+    $record = mysqli_query($con, "SELECT * FROM revenues WHERE id_user='$userid' AND id_revenue=$id");
 
     if (mysqli_num_rows($record) == 1) {
         $n = mysqli_fetch_array($record);
