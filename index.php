@@ -2,8 +2,8 @@
   include("session.php");
 
   // ==== Chart Expenses Per Category ====
-  $labels_per_categorie_result = mysqli_query($con, "select c.category_name from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = 1 group by e.expense_category;");
-  $values_per_categorie_result = mysqli_query($con, "select SUM(e.expense_value) as expenses_names from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = 1 group by e.expense_category;");
+  $labels_per_categorie_result = mysqli_query($con, "select c.category_name from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = $userid group by e.expense_category;");
+  $values_per_categorie_result = mysqli_query($con, "select SUM(e.expense_value) as expenses_names from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = $userid group by e.expense_category;");
 
   while ($row = mysqli_fetch_assoc($labels_per_categorie_result)) {
       $labels_per_categorie[] = $row['category_name'];
