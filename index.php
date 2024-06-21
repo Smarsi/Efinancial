@@ -28,24 +28,21 @@
   }
   // ==== Chart Expeses Per Day Ends Here =====
 
+  $total_revenues = 0.00;
   $total_revenues_query = mysqli_query($con, "select sum(revenue_value) as total_revenues from revenues where MONTH(made_in_dt) = MONTH(CURRENT_DATE) AND YEAR(made_in_dt) = YEAR(CURRENT_DATE) AND id_user = $userid;");
   if ($total_revenues_query) {
     $total_revenues_row = mysqli_fetch_assoc($total_revenues_query);
-    $total_revenues = $total_revenues_row['total_revenues'];
-  } else {
-    $total_revenues = "0.00";
+    $total_revenues = floatval($total_revenues_row['total_revenues']);
   }
     
+  $total_expenses = 0.00;
   $total_expenses_query = mysqli_query($con, "select sum(expense_value) as total_expenses from expenses where MONTH(made_in_dt) = MONTH(CURRENT_DATE) AND YEAR(made_in_dt) = YEAR(CURRENT_DATE) AND id_user = $userid;");
   if ($total_expenses_query) {
     $total_expenses_row = mysqli_fetch_assoc($total_expenses_query);
-    $total_expenses = $total_expenses_row['total_expenses'];
-  } else {
-      $total_expenses = "0.00";
+    $total_expenses = floatval($total_expenses_row['total_expenses']);
   }
 
   $balance = floatval($total_revenues) - floatval($total_expenses);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
