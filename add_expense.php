@@ -8,7 +8,7 @@ $expensedate = date("Y-m-d");
 $expensecategory = "Outros";
 $alreadySelectedOption = null;
 $cat_options = [];
-$optionsquery = "select category_name from categories where id_user = $userid";
+$optionsquery = "SELECT category_name FROM categories WHERE category_type = 'expense' AND id_user = $userid";
 $options_q = mysqli_query($con, $optionsquery);
 while($row = mysqli_fetch_assoc($options_q)){
     $cat_options[] = $row['category_name'];
@@ -33,7 +33,7 @@ if (isset($_POST['update'])) {
     $expensedate = $_POST['expensedate'];
     $expensecategory = $_POST['expensecategory'];
 
-    $sql = "UPDATE expenses SET expense='$expenseamount', expensedate='$expensedate', expensecategory='$expensecategory' WHERE user_id='$userid' AND expense_id='$id'";
+    $sql = "UPDATE expenses SET expense_value='$expenseamount', made_in_dt='$expensedate', expense_category='$expensecategory' WHERE id_user='$userid' AND id_expense='$id'";
     if (mysqli_query($con, $sql)) {
         echo "Records were updated successfully.";
     } else {
