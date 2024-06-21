@@ -2,6 +2,7 @@
 include("session.php");
 $update = false;
 $del = false;
+$disabled = false;
 $expenseamount = "";
 $revenue_description="";
 $expensedate = date("Y-m-d");
@@ -12,6 +13,9 @@ $optionsquery = "SELECT id_category, category_name FROM categories WHERE categor
 $options_q = mysqli_query($con, $optionsquery);
 while($row = mysqli_fetch_assoc($options_q)){
     $cat_options[$row['id_category']] = $row['category_name'];
+}
+if(count($cat_options) == 0){
+    $disabled=true;
 }
 if (isset($_POST['add'])) {
     $revenue_description = $_POST['revenue_description'];
@@ -184,6 +188,7 @@ if (isset($_GET['delete'])) {
                     <div class="col-md-3"></div>
 
                     <div class="col-md" style="margin:0 auto;">
+                    <?php if($disabled){echo '<div class="alert alert-danger" role="alert">Atenção: Você ainda não tem nenhuma categoria de receita! <a href="manage_categories.php">Crie sua primeira categoria aqui</a></div>';} ?>
                         <form action="" method="POST">
                             <div class="form-group row">
                                 <label for="expenseamount" class="col-sm-6 col-form-label"><b>Valor (R$)</b></label>
@@ -230,7 +235,7 @@ if (isset($_GET['delete'])) {
                                     <?php elseif ($del == true) : ?>
                                         <button class="btn btn-lg btn-block btn-danger" style="border-radius: 0%;" type="submit" name="delete">Deletar</button>
                                     <?php else : ?>
-                                        <button type="submit" name="add" class="btn btn-lg btn-block btn-success" style="border-radius: 0%;">Adicionar Receita</button>
+                                        <button <?php if($disabled){echo "disabled";} ?> type="submit" name="add" class="btn btn-lg btn-block btn-success" style="border-radius: 0%;">Adicionar Receita</button>
                                     <?php endif ?>
                                 </div>
                             </div>

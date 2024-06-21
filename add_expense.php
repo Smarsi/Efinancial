@@ -2,6 +2,7 @@
 include("session.php");
 $update = false;
 $del = false;
+$disabled = false;
 $expenseamount = "";
 $expense_description="";
 $expensedate = date("Y-m-d");
@@ -13,6 +14,10 @@ $options_q = mysqli_query($con, $optionsquery);
 while($row = mysqli_fetch_assoc($options_q)){
     $cat_options[$row['id_category']] = $row['category_name'];
 }
+if (count($cat_options) == 0){
+    $disabled = true;
+}
+
 if (isset($_POST['add'])) {
     $expense_description = $_POST['expense_description'];
     $expenseamount = floatval($_POST['expenseamount']);
@@ -25,28 +30,29 @@ if (isset($_POST['add'])) {
     header('location: add_expense.php');
 }
 
+// if (isset($_POST['update'])) {
+//     $id = $_GET['edit'];
+//     $expenseamount = $_POST['expenseamount'];
+//     $expensedate = $_POST['expensedate'];
+//     $expensecategory = $_POST['expensecategory'];
+
+//     $sql = "UPDATE expenses SET expense_value='$expenseamount', made_in_dt='$expensedate', expense_category='$expensecategory' WHERE id_user='$userid' AND id_expense='$id'";
+//     if (mysqli_query($con, $sql)) {
+//         echo "Records were updated successfully.";
+//     } else {
+//         echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
+//     }
+//     header('location: manage_expense.php');
+// }
+
 if (isset($_POST['update'])) {
     $id = $_GET['edit'];
-    $expenseamount = $_POST['expenseamount'];
+    $expense_description = $_POST['expense_description'];
+    $expenseamount = floatval($_POST['expenseamount']);
     $expensedate = $_POST['expensedate'];
     $expensecategory = $_POST['expensecategory'];
 
     $sql = "UPDATE expenses SET expense_value='$expenseamount', made_in_dt='$expensedate', expense_category='$expensecategory' WHERE id_user='$userid' AND id_expense='$id'";
-    if (mysqli_query($con, $sql)) {
-        echo "Records were updated successfully.";
-    } else {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
-    }
-    header('location: manage_expense.php');
-}
-
-if (isset($_POST['update'])) {
-    $id = $_GET['edit'];
-    $expenseamount = $_POST['expenseamount'];
-    $expensedate = $_POST['expensedate'];
-    $expensecategory = $_POST['expensecategory'];
-
-    $sql = "UPDATE expenses SET expense='$expenseamount', expensedate='$expensedate', expensecategory='$expensecategory' WHERE user_id='$userid' AND expense_id='$id'";
     if (mysqli_query($con, $sql)) {
         echo "Records were updated successfully.";
     } else {
@@ -182,10 +188,11 @@ if (isset($_GET['delete'])) {
                 <h3 class="mt-4 text-center">Adicionar Gasto</h3>
                 <hr>
                 <div class="row ">
-
+                    
                     <div class="col-md-3"></div>
-
+                    
                     <div class="col-md" style="margin:0 auto;">
+                    <?php if($disabled){echo '<div class="alert alert-danger" role="alert">Atenção: Você ainda não tem nenhuma categoria de despesa! <a href="manage_categories.php">Crie sua primeira categoria aqui</a></div>';} ?>
                         <form action="" method="POST">
                             <div class="form-group row">
                                 <label for="expenseamount" class="col-sm-6 col-form-label"><b>Valor (R$)</b></label>
@@ -232,7 +239,7 @@ if (isset($_GET['delete'])) {
                                     <?php elseif ($del == true) : ?>
                                         <button class="btn btn-lg btn-block btn-danger" style="border-radius: 0%;" type="submit" name="delete">Deletar</button>
                                     <?php else : ?>
-                                        <button type="submit" name="add" class="btn btn-lg btn-block btn-danger" style="border-radius: 0%;">Adicionar Gasto</button>
+                                        <button <?php if($disabled){echo "disabled";} ?> type="submit" name="add" class="btn btn-lg btn-block btn-danger" style="border-radius: 0%;">Adicionar Gasto</button>
                                     <?php endif ?>
                                 </div>
                             </div>
