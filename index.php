@@ -1,5 +1,7 @@
 <?php
   include("session.php");
+
+  // ==== Chart Expenses Per Category ====
   $labels_per_categorie_result = mysqli_query($con, "select c.category_name from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = 1 group by e.expense_category;");
   $values_per_categorie_result = mysqli_query($con, "select SUM(e.expense_value) as expenses_names from expenses e, categories c WHERE e.expense_category = c.id_category and MONTH(e.made_in_dt) = MONTH(current_date()) and e.id_user = 1 group by e.expense_category;");
 
@@ -10,10 +12,10 @@
   while ($row = mysqli_fetch_assoc($values_per_categorie_result)) {
     $values_per_categorie[] = floatval($row['expenses_names']); // Converter para float se necessário
   }
+  // ==== Chart Expenses Per Category Ends Here ====
 
-  print_r($labels_per_categorie);
-  print_r($values_per_categorie);
 
+  // ==== Chart Expenses Per Day =====
   $labels_per_day_result = mysqli_query($con, "SELECT DAY(made_in_dt) as e_day FROM expenses WHERE MONTH(made_in_dt) = MONTH(current_date()) AND id_user = $userid GROUP BY made_in_dt;");
   $values_per_day_result = mysqli_query($con, "SELECT SUM(expense_value) as e_value FROM expenses WHERE MONTH(made_in_dt) = MONTH(current_date()) AND id_user = $userid GROUP BY made_in_dt;");
  
@@ -24,9 +26,7 @@
   while ($row = mysqli_fetch_assoc($values_per_day_result)) {
     $values_per_day[] = $row['e_value'];
   }
-
-  print_r($labels_per_day);
-  print_r($values_per_day);
+  // ==== Chart Expeses Per Day Ends Here =====
 
   $total_revenues_query = mysqli_query($con, "select sum(revenue_value) as total_revenues from revenues where MONTH(made_in_dt) = MONTH(CURRENT_DATE) AND YEAR(made_in_dt) = YEAR(CURRENT_DATE) AND id_user = $userid;");
   if ($total_revenues_query) {
