@@ -38,21 +38,6 @@ if (isset($_POST['add'])) {
     header('location: add_expense.php');
 }
 
-// if (isset($_POST['update'])) {
-//     $id = $_GET['edit'];
-//     $expenseamount = $_POST['expenseamount'];
-//     $expensedate = $_POST['expensedate'];
-//     $expensecategory = $_POST['expensecategory'];
-
-//     $sql = "UPDATE expenses SET expense_value='$expenseamount', made_in_dt='$expensedate', expense_category='$expensecategory' WHERE id_user='$userid' AND id_expense='$id'";
-//     if (mysqli_query($con, $sql)) {
-//         echo "Records were updated successfully.";
-//     } else {
-//         echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
-//     }
-//     header('location: manage_expense.php');
-// }
-
 if (isset($_POST['update'])) {
     $id = $_GET['edit'];
     $expense_description = $_POST['expense_description'];

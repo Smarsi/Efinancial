@@ -17,6 +17,15 @@ while($row = mysqli_fetch_assoc($options_q)){
 if(count($cat_options) == 0){
     $disabled=true;
 }
+
+function formatFinancialValue($value) {
+    $value = trim($value);
+    if (strpos($value, ',') !== false) {
+        $value = str_replace(',', '.', $value);
+    }
+    return $value;
+}
+
 if (isset($_POST['add'])) {
     $revenue_description = $_POST['revenue_description'];
     $expenseamount = floatval($_POST['expenseamount']);
@@ -31,10 +40,12 @@ if (isset($_POST['add'])) {
 if (isset($_POST['update'])) {
     $id = $_GET['edit'];
     $expenseamount = $_POST['expenseamount'];
+    $formated_amount = formatFinancialValue($expenseamount);
+    $revenue_description = $_POST['revenue_description'];
     $expensedate = $_POST['expensedate'];
     $expensecategory = $_POST['expensecategory'];
 
-    $sql = "UPDATE revenues SET revenue_value='$expenseamount', made_in_dt='$expensedate', revenue_category='$expensecategory' WHERE id_user='$userid' AND id_revenue='$id'";
+    $sql = "UPDATE revenues SET revenue_value='$formated_amount', revenue_description='$revenue_description', made_in_dt='$expensedate', revenue_category='$expensecategory' WHERE id_user='$userid' AND id_revenue='$id'";
     if (mysqli_query($con, $sql)) {
         echo "Records were updated successfully.";
     } else {
@@ -43,20 +54,6 @@ if (isset($_POST['update'])) {
     header('location: manage_revenue.php');
 }
 
-if (isset($_POST['update'])) {
-    $id = $_GET['edit'];
-    $expenseamount = $_POST['expenseamount'];
-    $expensedate = $_POST['expensedate'];
-    $expensecategory = $_POST['expensecategory'];
-
-    $sql = "UPDATE expenses SET expense='$expenseamount', expensedate='$expensedate', expensecategory='$expensecategory' WHERE user_id='$userid' AND revenue_id='$id'";
-    if (mysqli_query($con, $sql)) {
-        echo "Records were updated successfully.";
-    } else {
-        echo "ERROR: Could not able to execute $sql. " . mysqli_error($con);
-    }
-    header('location: manage_revenue.php');
-}
 
 if (isset($_POST['delete'])) {
     $id = $_GET['delete'];
