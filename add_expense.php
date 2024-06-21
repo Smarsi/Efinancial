@@ -14,8 +14,10 @@ while($row = mysqli_fetch_assoc($options_q)){
 }
 if (isset($_POST['add'])) {
     $expense_description = $_POST['expense_description'];
-    $expenseamount = $_POST['expenseamount'];
+    $expenseamount = floatval($_POST['expenseamount']);
     $expensedate = $_POST['expensedate'];
+    print_r($_POST);
+    print_r($expenseamount);
     $expensecategory = $_POST['expensecategory'];
 
     // $expenses = "INSERT INTO expenses (user_id, expense,expensedate,expensecategory) VALUES ('$userid', '$expenseamount','$expensedate','$expensecategory')";
@@ -203,67 +205,14 @@ if (isset($_GET['delete'])) {
                                 <div class="row">
                                     <legend class="col-form-label col-sm-6 pt-0"><b>Categoria</b></legend>
                                     <div class="col-md">
-
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>Selecione a categoria</option>
-                                        <?php
-                                            
-                                            foreach ($cat_options as $index => $category_name) {
-                                                echo '<option value="' . $index . '">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
-                                            }
-
-                                        ?>
-                                    </select>
-
-                                        <!-- <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory4" value="Saúde" <?php echo ($expensecategory == 'Saúde') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory4">
-                                                Saúde
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory3" value="Alimentação" <?php echo ($expensecategory == 'Alimentação') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory3">
-                                                Alimentação
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory2" value="Entretenimento" <?php echo ($expensecategory == 'Entretenimento') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory2">
-                                                Entretenimento
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory1" value="Transporte" <?php echo ($expensecategory == 'Transporte') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory1">
-                                                Transporte
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory7" value="Compras" <?php echo ($expensecategory == 'Compras') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory7">
-                                                Compras
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory6" value="Mercado" <?php echo ($expensecategory == 'Mercado') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory6">
-                                                Mercado
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory8" value="Contas" <?php echo ($expensecategory == 'Contas') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory8">
-                                                Contas
-                                            </label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="expensecategory" id="expensecategory5" value="Outros" <?php echo ($expensecategory == 'Outros') ? 'checked' : '' ?>>
-                                            <label class="form-check-label" for="expensecategory5">
-                                                Outros
-                                            </label>
-                                        </div> -->
+                                        <select class="form-select" name="expensecategory" aria-label="expensecategory" id="expensecategory" required>
+                                            <option selected>Selecione a categoria</option>
+                                            <?php
+                                                foreach ($cat_options as $index => $category_name) {
+                                                    echo '<option value="' . $index+1 . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
+                                                }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 </div>
