@@ -8,10 +8,10 @@ $expensedate = date("Y-m-d");
 $expensecategory = "Outros";
 $alreadySelectedOption = null;
 $cat_options = [];
-$optionsquery = "SELECT category_name FROM categories WHERE category_type = 'expense' AND id_user = $userid";
+$optionsquery = "SELECT id_category, category_name FROM categories WHERE category_type = 'expense' AND id_user = $userid";
 $options_q = mysqli_query($con, $optionsquery);
 while($row = mysqli_fetch_assoc($options_q)){
-    $cat_options[] = $row['category_name'];
+    $cat_options[$row['id_category']] = $row['category_name'];
 }
 if (isset($_POST['add'])) {
     $expense_description = $_POST['expense_description'];
@@ -212,11 +212,11 @@ if (isset($_GET['delete'])) {
                                             <option <?php if(!$alreadySelectedOption){echo "selected";} ?>>-- Selecione a categoria --</option>
                                             <?php
                                                 foreach ($cat_options as $index => $category_name) {
-                                                    $item_value = $index + 1;
+                                                    $item_value = $index;
                                                     if($expensecategory == $item_value){
-                                                        echo '<option selected value="' . $index+1 . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
+                                                        echo '<option selected value="' . $index . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
                                                     } else{
-                                                        echo '<option value="' . $index+1 . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
+                                                        echo '<option value="' . $index . '" name="expensecategory">' . htmlspecialchars($category_name, ENT_QUOTES, 'UTF-8') . '</option>';
                                                     }
                                                 }
                                             ?>

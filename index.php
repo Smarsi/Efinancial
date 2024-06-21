@@ -123,12 +123,12 @@
                     </a>
                   </div>
                   <div class="col text-center">
-                    <a href="profile.php"><i data-feather="plus" class="feather-big-positive"></i>
+                    <a href="add_revenue.php"><i data-feather="plus" class="feather-big-positive"></i>
                       <p>Adicionar Receita</p>
                     </a>
                   </div>
                   <div class="col text-center">
-                    <a href="profile.php"><i data-feather="dollar-sign" class="feather-big-positive"></i>
+                    <a href="manage_revenue.php"><i data-feather="dollar-sign" class="feather-big-positive"></i>
                       <p>Gerenciar Receitas</p>
                     </a>
                   </div>
