@@ -24,4 +24,6 @@ After setting up the project just create your account and start to use. Its simp
 
 > $con = mysqli_connect("db_host:db_port","db_user","db_password","db_name");
 
-## 3 - All done, juste acess the URL of your server and start to use it!
+## 3 - Run the "dailyexpense.sql" into your database
+
+## 4 - All done, juste acess the URL of your server and start to use it!
