@@ -1,0 +1,8 @@
+
+
+
+# All images (from uploads)
+
+uploads/*.png
+uploads/*.jpg
+uploads/*.jpeg
